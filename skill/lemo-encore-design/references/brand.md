@@ -236,6 +236,10 @@ In Penpot the logos live on **Page 1** as `Lemo Logos` and `Encore Logos`, with 
 those names, not ids** — and clone them into your board rather than moving the originals. Note that
 `clone()` cannot cross pages, so build on the page where the logos live, or copy them over first.
 
+**These only exist if the person imported the brand-assets file** — every account is separate and a
+fresh Penpot file has no logos. If the groups are missing, stop and get them imported; never
+improvise a wordmark in live type. See step 3 of `SKILL.md`.
+
 ## Texture, if a piece reads flat
 
 Texture should **reference how the object is actually made**. On merch graphics, screen-print

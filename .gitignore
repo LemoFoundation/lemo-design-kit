@@ -1,3 +1,7 @@
+# built skill zips go to GitHub releases, not into git
+build/
+dist/
+
 # never commit a Penpot key
 *.env
 .env*

@@ -1,37 +1,66 @@
 # Maintaining this kit
 
-Notes for whoever owns the kit (currently Austin). Everyone else wants [README.md](README.md).
+Notes for whoever owns the kit. Everyone else wants [README.md](README.md).
 
 ## Where this came from
 
-Ported out of the `VideoProjects` repo, where the same capability runs as the `graphic-design`
-skill under Claude Code. That version resolves the brand pack from the filesystem
+Ported out of the personal `VideoProjects` repo, where the same capability runs as the
+`graphic-design` skill under Claude Code. That version resolves a brand pack from the filesystem
 (`_tools/brands/lemo-encore/`) and layers it over a universal `STYLE.md`. **This kit is
 self-contained instead** — `references/brand.md` is the universal discipline and the lemo-encore
-pack flattened into one file, because there's no filesystem on claude.ai.
+pack flattened into one file, because a claude.ai session has no filesystem.
 
-Deliberately left behind: the carousel format layer, the travel-diary recipe, the Python helpers
-(`align-cutout.py`, `image-treat.py`), the PowerShell fallback runner, and the whole brand-pack
-resolution mechanism. None of them survive the move to a web session, and none are needed for
-flyers.
+Deliberately left behind: the carousel format layer, the travel-diary recipe, the Python helpers,
+the PowerShell fallback runner, and the brand-pack resolution mechanism. None survive the move to a
+web session, and none are needed here.
 
-## Rebuilding the zip
+## Shipping a change
 
-After editing anything under `skill/`:
+1. Edit under `skill/lemo-encore-design/`.
+2. Run `.\build.ps1` — writes `build/lemo-encore-design.zip` (gitignored).
+3. Commit the source change.
+4. Cut a GitHub release and attach `lemo-encore-design.zip` plus the current
+   `lemo-brand-assets.zip`.
+5. Tell the team to re-download. **There is no push mechanism** — whoever uploaded v1 keeps running
+   v1 forever until they upload a new one.
 
-```powershell
-.\build.ps1
-```
+**Don't use `Compress-Archive`.** Windows PowerShell 5.1 writes entry paths with backslashes, which
+the ZIP spec forbids; extractors that honour the spec read `lemo-encore-design\SKILL.md` as a flat
+filename rather than a folder, and the skill won't load. `build.ps1` writes forward slashes.
 
-**Don't use `Compress-Archive`.** Windows PowerShell 5.1 writes entry paths with backslashes
-(`lemo-design\SKILL.md`), which the ZIP spec forbids — some extractors then read that as one flat
-filename instead of a folder and the skill won't load. `build.ps1` writes forward slashes.
+The zip must contain the `lemo-encore-design/` folder with `SKILL.md` at its root.
 
-The zip must contain the `lemo-design/` folder with `SKILL.md` at its root. Re-upload it in
-Claude → Settings → Capabilities → Skills (replace the existing one).
+## Brand assets
 
-Anyone who already uploaded the old version keeps running it until they re-upload. **There's no
-push mechanism** — when you ship a meaningful brand change, tell the team to grab the new zip.
+`assets/logos/` holds the source logo artwork. The **Penpot import file** (`lemo-brand-assets.zip`)
+is built by hand from Penpot's own export, not by a script:
+
+- Build a Penpot file with one page containing both logo sets
+- Groups named exactly `Lemo Logos` and `Encore Logos`
+- Children named `Logo / Black`, `Logo / White` (LEMO) and `Logo / Navy`, `Logo / Red`,
+  `Logo / White` (Encore)
+- Export it from the Penpot dashboard and attach to the release
+
+**Those names are load-bearing.** `brand.md` documents the measured alpha-extent geometry for
+placing the marks, and `SKILL.md` blocks the build if the groups are absent. Rename anything in
+Penpot and both break.
+
+## Fonts and licensing
+
+Only Montserrat is assumed. It's a Google font, ships with Penpot, and per the brand book is a
+genuine brand face for both sub-brands — so the kit works with zero font installation.
+
+**Before putting font binaries in this repo, check what you're allowed to redistribute:**
+
+- **NFLMinnesota Vikings** — almost certainly an unlicensed copy of an NFL team wordmark.
+  Redistributing it from a LEMO-owned repo carries licensing and trademark exposure, and more so if
+  this repo is ever public.
+- **Futura** — commercial under every cut (Linotype, Paratype, Bitstream). Redistribution is not
+  permitted.
+- **Pirulen** — a Larabie face; free for personal use, commercial use typically needs a licence.
+
+Safest is to keep `assets/fonts/` as instructions on where to obtain each one, and let people
+install them into their own Penpot account. Flagged 2026-08-20; the call is LEMO's.
 
 ## Keeping it in sync with VideoProjects
 
@@ -39,31 +68,28 @@ The two copies will drift. When a real lesson gets learned on either side:
 
 - **Brand decisions** (a colour rule, a type gotcha, a logo measurement) → update *both*
   `_tools/brands/lemo-encore/STYLE.md` in VideoProjects and `references/brand.md` here.
-- **Penpot API gotchas** → `references/penpot-api.md` in both. These are usually copy-paste
-  identical; the kit's version just has the repo-local paths stripped.
+- **Penpot API gotchas** → `references/penpot-api.md` in both. Usually copy-paste identical; this
+  version just has repo-local paths stripped.
 - **Method / workflow changes** → likely diverge. The VideoProjects skill assumes a designer
-  driving it; this one assumes a non-designer. Don't blindly copy `SKILL.md` across.
+  driving it; this one assumes a non-designer with nobody reviewing the output. Don't blindly copy
+  `SKILL.md` across.
 
-Record brand decisions with a dated line in the "Changelog" section of the VideoProjects pack, the
-way that repo already does — this kit's `brand.md` intentionally has no changelog, to keep it
-readable for non-designers.
+Record brand decisions with a dated line in the changelog of the VideoProjects pack, the way that
+repo already does. This kit's `brand.md` intentionally has no changelog, to stay readable for
+non-designers.
 
 ## Things to watch
 
-- **Plan gating.** Custom connectors need Pro/Max/Team. A free-tier coworker cannot use this at
-  all, and the failure will look like "the connector page has no Add button."
-- **The tab-open requirement is the #1 support call.** Penpot's MCP is browser-relayed, so
-  Penpot must be open with MCP on *before* the chat starts. The README leads with it and the
-  skill's step 0 handles it, but expect to explain it in person during the demo.
-- **Each person needs their own Penpot key.** Never distribute yours. A key is account-scoped, so
-  a shared one would let anyone act as you in Penpot.
-- **Fonts.** Only Montserrat is installed in Penpot. Pirulen, NFLMinnesota Vikings, Futura and
-  Futura Book have to be uploaded to the Penpot file before anyone can set type in them. If the
-  team will need display type, upload them to the shared file once rather than making each person
-  do it.
+- **Plan gating.** Custom connectors need Pro/Max/Team. A free-tier teammate can't use this at all,
+  and it looks like "the connector page has no Add button."
+- **The tab-open requirement is the #1 support call.** Penpot's MCP is browser-relayed, so Penpot
+  must be open with MCP on *before* the chat starts.
+- **Everyone needs their own Penpot key.** Never distribute yours — a key is account-scoped.
+- **The empty-file problem.** New accounts have no logos, which is why `SKILL.md` step 3 blocks the
+  build. If someone reports "it won't design anything," check they imported the assets.
 
 ## Demo suggestion
 
-The pitch lands better if they watch a revision, not a build. Have a flyer already made, then let
-someone from the team ask for three changes live — a wrong date, a bigger headline, a dark
-version. The point isn't that Claude can design; it's that they stop waiting on you for round two.
+The pitch lands better if they watch a **revision**, not a build. Have a flyer already made, then
+let someone ask for three changes live — a wrong date, a bigger headline, a dark version. The point
+isn't that Claude can design; it's that they stop waiting on you for round two.
