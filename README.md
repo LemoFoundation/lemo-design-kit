@@ -13,7 +13,7 @@ it what to change.
 | | |
 |---|---|
 | **A Claude account** | Pro, Max, or Team. (Custom connectors aren't available on the free plan.) |
-| **A Penpot account** | Free. You'll make your own at [penpot.app](https://penpot.app). |
+| **A Penpot account** | Free. You'll make your own at [penpot.app](https://penpot.app). A blank file is fine. |
 | **A browser** | Penpot has to stay open in a tab while you work. |
 
 Setup takes about ten minutes and you only do it once.
@@ -22,21 +22,17 @@ Setup takes about ten minutes and you only do it once.
 
 ## Setup
 
-### 1. Download the two files you need
+### 1. Download the design kit
 
-From this repo's **Releases** page:
+From this repo's **Releases** page, download **`lemo-encore-design.zip`**. That one file is
+everything — the design skill and the LEMO and Encore logo artwork together. Save it somewhere you
+can find it again.
 
-- **`lemo-encore-design.zip`** — the design skill
-- **`lemo-brand-assets.zip`** — the LEMO and Encore logos
+### 2. Make a Penpot account
 
-Save both somewhere you can find them again.
-
-### 2. Make a Penpot account and import the logos
-
-1. Go to [penpot.app](https://penpot.app) and sign up.
-2. From the dashboard, click **Import file** and select `lemo-brand-assets.zip`.
-3. That adds a page containing both the LEMO and Encore logo sets. Claude needs these — it will
-   refuse to build without them rather than fake a logo.
+Go to [penpot.app](https://penpot.app), sign up, and create a **blank file**. That's all you need
+to do here — there is nothing to import. Claude adds the logos to your file itself the first time
+it builds something.
 
 ### 3. Get your Penpot key
 
@@ -160,8 +156,9 @@ worse. The tab just needs to be live first.
 
 **Claude says it can't find the logos**
 
-You skipped step 2, or you're in a different Penpot file from the one you imported them into.
-Import the brand assets from the dashboard.
+It shouldn't — Claude adds them itself. If it says it couldn't, the kit zip you downloaded has a
+`logos` folder inside it: unzip it and drag the logo PNG you need onto your Penpot canvas, then
+tell Claude to carry on. If that happens, mention it to whoever maintains the kit.
 
 **Claude shows me a blank image**
 
@@ -184,15 +181,19 @@ usually know which rule it broke.
 ## What's in this repo
 
 ```
-skill/lemo-encore-design/   the skill source
+skill/lemo-encore-design/   the skill source - this is what gets zipped for a release
   SKILL.md                  how Claude behaves as the designer
   references/
     brand.md                the LEMO/Encore brand book - type, colour, logos, rules
     formats.md              sizes, DPI and safe areas for every kind of piece
     penpot-api.md           how to drive Penpot without breaking things
     penpot-helpers.js       helper code Claude loads at the start of each session
-assets/                     logo artwork and font notes
-build.ps1                   packages the skill zip for a release
+  assets/logos/             1500px logo artwork Claude uploads into a blank Penpot file
+    *.png                   the artwork, also draggable by hand if the upload fails
+    *.png.b64               the same files pre-encoded, ready to paste into execute_code
+    manifest.json           each variant's alpha-extent geometry, for placing the mark
+assets/                     5000px logo masters, brand guidelines, and font notes
+build.py                    packages the skill zip; --assets regenerates the logo artwork
 ```
 
 Maintaining this? See [MAINTAINING.md](MAINTAINING.md).

@@ -212,33 +212,40 @@ small labels.
 ## Logo artwork geometry
 
 The logo files are **squares with large transparent padding**, so placing art by its square
-misaligns the wordmark. Measured content boxes (alpha extent, 2026-07-27):
+misaligns the wordmark. Measured content boxes (alpha extent of the bundled 1500px artwork):
 
 | Mark | x range | y range | content aspect |
 |---|---|---|---|
-| LEMO | `15.70% – 87.90%` | `43.70% – 56.50%` | 5.641 |
-| Encore | `4.20% – 96.10%` | `37.50% – 60.30%` | 4.031 |
+| LEMO — Black, White | `15.60% – 87.93%` | `43.60% – 56.67%` | 5.536 |
+| Encore — Navy, Red | `4.07% – 96.20%` | `37.33% – 60.40%` | 3.994 |
+| Encore — **White** | `11.40% – 92.13%` | `39.00% – 59.07%` | 4.023 |
+
+**Encore White is NOT the same artwork as Navy and Red** — it sits inset by a further 7% on each
+side. Using the Navy figures for it makes the mark render ~9% too large and off-centre. There is
+one row per variant in `assets/logos/manifest.json`; read the numbers from there rather than
+hardcoding, and never assume one sub-brand's variants share a box.
 
 Place by the **visible** box and back-solve the square:
 
 ```js
-// want the visible wordmark W wide at (px, py), for LEMO:
-const fx0=0.1570, fx1=0.8790, fy0=0.4370, fy1=0.5650;
-const squareW = W / (fx1 - fx0);
+// want the visible wordmark W wide at (px, py):
+const m = storage.logos.manifest.find(v => v.shape === 'Logo / Black');
+const squareW = W / (m.x1 - m.x0);
 const squareH = squareW;                      // the artwork is square
 img.resize(squareW, squareH);
-img.x = px - fx0 * squareW;
-img.y = py - fy0 * squareH;
+img.x = px - m.x0 * squareW;
+img.y = py - m.y0 * squareH;
 ```
 
-In Penpot the logos live on **Page 1** as `Lemo Logos` and `Encore Logos`, with children named
-`Logo / <Variant>` (`Black` / `White` for LEMO; `Navy` / `Red` / `White` for Encore). **Anchor on
-those names, not ids** — and clone them into your board rather than moving the originals. Note that
-`clone()` cannot cross pages, so build on the page where the logos live, or copy them over first.
+In Penpot the logos live on the **current page** as `Lemo Logos` and `Encore Logos`, with children
+named `Logo / <Variant>` (`Black` / `White` for LEMO; `Navy` / `Red` / `White` for Encore).
+**Anchor on those names, not ids** — and clone them into your board rather than moving the
+originals. Note that `clone()` cannot cross pages, so build on the page where the logos live.
 
-**These only exist if the person imported the brand-assets file** — every account is separate and a
-fresh Penpot file has no logos. If the groups are missing, stop and get them imported; never
-improvise a wordmark in live type. See step 3 of `SKILL.md`.
+**A fresh Penpot file has no logos, and that is the normal case** — every account is separate and
+the kit is designed to start from a blank file. If the groups are missing you **upload them
+yourself** from the artwork bundled in this skill; you do not ask the user to import anything. See
+step 3 of `SKILL.md`. What you must never do is improvise a wordmark in live type.
 
 ## Texture, if a piece reads flat
 

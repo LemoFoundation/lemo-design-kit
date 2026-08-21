@@ -1,0 +1,62 @@
+[
+  {
+    "file": "lemo-black.png",
+    "group": "Lemo Logos",
+    "shape": "Logo / Black",
+    "square": 1500,
+    "x0": 0.156,
+    "x1": 0.8793,
+    "y0": 0.436,
+    "y1": 0.5667,
+    "contentAspect": 5.536,
+    "b64Bytes": 27224
+  },
+  {
+    "file": "lemo-white.png",
+    "group": "Lemo Logos",
+    "shape": "Logo / White",
+    "square": 1500,
+    "x0": 0.156,
+    "x1": 0.8793,
+    "y0": 0.436,
+    "y1": 0.5667,
+    "contentAspect": 5.536,
+    "b64Bytes": 29488
+  },
+  {
+    "file": "encore-navy.png",
+    "group": "Encore Logos",
+    "shape": "Logo / Navy",
+    "square": 1500,
+    "x0": 0.0407,
+    "x1": 0.962,
+    "y0": 0.3733,
+    "y1": 0.604,
+    "contentAspect": 3.994,
+    "b64Bytes": 41668
+  },
+  {
+    "file": "encore-red.png",
+    "group": "Encore Logos",
+    "shape": "Logo / Red",
+    "square": 1500,
+    "x0": 0.0407,
+    "x1": 0.962,
+    "y0": 0.3747,
+    "y1": 0.604,
+    "contentAspect": 4.017,
+    "b64Bytes": 38924
+  },
+  {
+    "file": "encore-white.png",
+    "group": "Encore Logos",
+    "shape": "Logo / White",
+    "square": 1500,
+    "x0": 0.114,
+    "x1": 0.9213,
+    "y0": 0.39,
+    "y1": 0.5907,
+    "contentAspect": 4.023,
+    "b64Bytes": 29808
+  }
+]
