@@ -1,0 +1,10 @@
+# The .b64 sidecars are pasted verbatim into an execute_code call and decoded with atob().
+# Never let git normalize line endings in them - treat them as binary.
+*.b64 binary
+
+# Logo artwork
+*.png binary
+*.svg binary
+
+# Keep the build script LF-clean if it ever runs somewhere other than Windows
+*.py text eol=lf

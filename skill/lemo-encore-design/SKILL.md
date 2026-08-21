@@ -62,20 +62,72 @@ one `execute_code` call. It installs `storage.gd` — tree walker, board and nam
 setters for fills, shadows, strokes and text. It returns the list of boards in the file, which also
 tells you what's already there.
 
-### 3. Check the brand assets are present
+### 3. Make sure the logo artwork is in the file
 
-Everyone works in their **own** Penpot account, so a new person's file is empty — no logos. Look
-for the logo groups by name (`Lemo Logos`, `Encore Logos`) among the page's shapes.
+**Starting from a blank Penpot file is the normal, supported case.** Every person works in their
+own Penpot account, so a new file has no logos in it. You put them there yourself — **never ask
+the user to import a template or a brand-assets file.** That workflow is gone.
 
-**If they're missing, stop and get them imported before building anything.** Do not improvise a
-wordmark in live type — that is exactly how an off-brand piece happens. Tell them:
+Look for the logo groups by name (`Lemo Logos`, `Encore Logos`) among the current page's shapes.
+If the group you need is already there, use it and skip the rest of this step.
 
-> I can't find the LEMO logo artwork in this file. Grab the brand assets from the design kit, then
-> in Penpot go to your Dashboard → **Import file** and select it. That adds a page with both logo
-> sets. Tell me when it's done.
+**If it's missing, upload it.** This skill bundles the artwork at `assets/logos/`:
 
-Note that `clone()` **cannot cross pages**, so build on the page where the logos live, or copy them
-onto your working page first.
+| File | Base64 sidecar | Group | Shape name |
+|---|---|---|---|
+| `lemo-black.png` | `lemo-black.png.b64` | `Lemo Logos` | `Logo / Black` |
+| `lemo-white.png` | `lemo-white.png.b64` | `Lemo Logos` | `Logo / White` |
+| `encore-navy.png` | `encore-navy.png.b64` | `Encore Logos` | `Logo / Navy` |
+| `encore-red.png` | `encore-red.png.b64` | `Encore Logos` | `Logo / Red` |
+| `encore-white.png` | `encore-white.png.b64` | `Encore Logos` | `Logo / White` |
+
+`assets/logos/manifest.json` carries each variant's alpha-extent geometry — load it into
+`storage.logos` and place marks from it (see `references/brand.md`).
+
+**Upload ONLY the variants the piece actually needs — usually one, sometimes two.** Each base64
+payload is 27–41KB, so uploading all five costs roughly five times what the job requires. Decide
+the sub-brand and the ground colour first, then fetch just those variants.
+
+Read the `.b64` sidecar for the variant you need and pass it as the code of one `execute_code`
+call. `atob` is available — this runs in the browser plugin context:
+
+```js
+const B64 = "<paste the contents of the .b64 file here>";
+const bin = atob(B64);
+const bytes = new Uint8Array(bin.length);
+for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+
+const media = await penpot.uploadMediaData('Logo / Black', bytes, 'image/png');
+const r = penpot.createRectangle();
+r.name  = 'Logo / Black';
+r.resize(1500, 1500);                          // the artwork is square
+r.fills = [{ fillOpacity: 1, fillImage: media }];
+r.x = -2000; r.y = -2000;                      // park off-canvas; clone into boards from here
+
+const g = penpot.group([r]);
+g.name = 'Lemo Logos';
+return { group: g.name, child: r.name, id: r.id };
+```
+
+Adding a second variant to a group that already exists: create the rectangle the same way, then
+`penpot.group()` it together with the existing group's children — or simply append it and rename.
+**The group and shape names above are load-bearing**: `brand.md` places marks by looking them up,
+and a rename silently breaks every later build.
+
+**Verify it stuck.** Per the DANGER section of `references/penpot-api.md`, a call can return valid
+ids and still be rolled back on the next sync. Re-query the group by name in a *separate*
+`execute_code` call before you build on top of it.
+
+**Tell the user what you did, briefly** — "I've added the Encore logo to your file" — so the new
+shapes aren't a surprise. Don't walk them through it; it's your job, not theirs.
+
+**If the upload fails**, fall back to asking — but only then:
+
+> I couldn't add the logo automatically. The design kit zip you downloaded has a `logos` folder
+> inside it — could you drag `encore-navy.png` from there onto your Penpot canvas? Then tell me
+> and I'll carry on.
+
+Note that `clone()` **cannot cross pages**, so build on the page where the logos live.
 
 ## The intake gate
 
@@ -120,7 +172,7 @@ not use it.
 ## Workflow
 
 1. **Intake gate** — the four above.
-2. **Session start** — health check, helpers, brand-assets check.
+2. **Session start** — health check, helpers, logo upload if the file is blank.
 3. **Look at what's there** — re-query live Penpot state. They edit between messages, so never
    trust ids you cached in an earlier turn. Anchor on **board and layer names**.
 4. **Build v1 rough** — right structure, real copy, brand colours. Do not polish yet.
