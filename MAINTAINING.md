@@ -83,16 +83,20 @@ the per-session cost for everyone — check the token figures it prints before c
 Only Montserrat is assumed. It's a Google font, ships with Penpot, and per the brand book is a
 genuine brand face for both sub-brands — so the kit works with zero font installation.
 
-**Before putting font binaries in this repo, check what you're allowed to redistribute:**
+**No font binaries are committed to this repo, and none should be added without first confirming
+the licence permits redistribution.** That confirmation is a per-font question and the answer is
+often no:
 
-- Display faces derived from sports-team wordmarks carry trademark considerations separate from
-  any font licence; check both before adding one.
-- **Futura** — commercial under every cut (Linotype, Paratype, Bitstream). Redistribution is not
+- **Futura** is commercial under every cut (Linotype, Paratype, Bitstream); redistribution is not
   permitted.
-- **Pirulen** — a Larabie face; free for personal use, commercial use typically needs a licence.
+- **Pirulen** is a Larabie face — free for personal use, with commercial use typically requiring a
+  licence.
+- Display faces derived from sports-team wordmarks generally carry trademark considerations
+  separate from any font licence, so check both.
 
-Safest is to keep `assets/fonts/` as instructions on where to obtain each one, and let people
-install them into their own Penpot account. Flagged 2026-08-20; the call is LEMO's.
+`assets/fonts/` therefore holds **instructions on where to obtain each face**, not the faces
+themselves, and people install them into their own Penpot account. Keep it that way unless someone
+has checked the rights.
 
 ## Keeping it in sync with VideoProjects
 

@@ -16,5 +16,5 @@ To install one: Penpot **Dashboard → Fonts → Upload**, then tell Claude it's
 stays on Montserrat unless told otherwise.
 
 **Before adding font binaries to this repo, read the licensing note in MAINTAINING.md.** Redistribution
-rights differ per face and are often restricted — Futura is commercial under every cut, and
-Pirulen's commercial use typically needs a licence.
+rights differ per face and are often restricted — Futura is commercial under every cut, and Pirulen's
+commercial use typically needs a licence. Confirm the rights before committing any font file.
